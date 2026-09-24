@@ -1,6 +1,6 @@
 # Lead Manager
 
-A foundation for an admission lead management system. The project currently defines the PostgreSQL database schema and the SQLAlchemy and Pydantic models used to manage leads, counsellors, courses, follow-ups, and activity history.
+A working admission lead management app with a FastAPI backend, responsive React frontend, and SQLite/PostgreSQL support. It manages lead assignment, lifecycle status changes, course preferences, follow-ups, activity history, and manager reporting.
 
 ## Current Features
 
@@ -71,6 +71,13 @@ Activate the environment on Windows:
 .venv\Scripts\Activate.ps1
 ```
 
+On macOS or Linux:
+
+```bash
+source .venv/bin/activate
+python -m app.seed
+```
+
 ## Backend Setup
 
 Install the Python dependencies:
@@ -126,6 +133,12 @@ If PostgreSQL is installed but the commands are still not found, run them using 
 ```
 
 The schema creates the tables, indexes, and initial users, lead sources, and courses. It expects PostgreSQL because it uses PostgreSQL-specific types and syntax such as `SERIAL`, `TIMESTAMPTZ`, and partial indexes.
+
+## Assumptions
+
+- Each normalized phone number represents one lead; duplicate submissions return the existing lead.
+- Counsellors are pre-created users, and only active counsellors can receive new or reassigned leads.
+- The current sample data and phone normalization assume Indian 10-digit phone numbers.
 
 ## Domain Rules
 
@@ -214,6 +227,9 @@ assert can_transition(LeadStatus.NEW, LeadStatus.CONTACTED)
 - Assignment counts only open statuses, so converted and lost leads do not affect workload balancing.
 - Deactivating a counsellor does not redistribute their existing leads; this is documented future work.
 - Phone duplicate detection keeps the last 10 digits, which is suitable for the current India-focused sample data but may need country-aware normalization for a multi-country deployment.
+- Stale leads are returned when `last_activity_at` is older than the requested `stale_days` value.
+- Pending follow-ups remain visible as overdue even when their lead is marked lost; they must be explicitly completed or cancelled.
+- Deleting a lead cascades its course links, follow-ups, and activity rows. Because the audit rows belong to the deleted lead, deletion intentionally removes that lead's audit history as well.
 - Authentication and authorization are intentionally not included in this MVP.
 
 ## Next Steps
