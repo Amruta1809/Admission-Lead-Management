@@ -220,8 +220,3 @@ assert can_transition(LeadStatus.NEW, LeadStatus.CONTACTED)
 
 Authentication and authorization, migrations, counsellor deactivation workflows, and production deployment configuration remain future work.
 
-## Submission
-
-- Deadline: 9:00 AM, 25 September 2026
-- Submission email: `tech_interview@edumerge.com`
-- AI usage details: [AI_USAGE_REPORT.md](AI_USAGE_REPORT.md)
