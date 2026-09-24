@@ -128,8 +128,8 @@ $env:DATABASE_URL = "postgresql+psycopg://postgres:YOUR_PASSWORD@localhost:5432/
 If PostgreSQL is installed but the commands are still not found, run them using the full path, replacing `<version>` with the installed version:
 
 ```powershell
-& "C:\Program Files\PostgreSQL\<version>\bin\createdb.exe" -U postgres lead_manager
-& "C:\Program Files\PostgreSQL\<version>\bin\psql.exe" -U postgres -d lead_manager -f schema.sql
+ -U postgres lead_manager
+ -U postgres -d lead_manager -f schema.sql
 ```
 
 The schema creates the tables, indexes, and initial users, lead sources, and courses. It expects PostgreSQL because it uses PostgreSQL-specific types and syntax such as `SERIAL`, `TIMESTAMPTZ`, and partial indexes.
